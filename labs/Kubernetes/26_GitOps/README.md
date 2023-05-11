@@ -18,7 +18,6 @@ Before you start the workshop, please ensure you have the following:
 We'll start by installing ArgoCD on your Kubernetes cluster. Run the following commands:
 
 ```
-bashCopy code
 kubectl create namespace argocd
 kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 ```
