@@ -146,7 +146,7 @@ The **`selfHeal`** attribute allows ArgoCD to automatically revert changes made 
 5. Change the number of replicas for your deployment directly in the Kubernetes cluster.
 6. Observe that ArgoCD automatically reverts the change to match the Git repository.
 
-### **Exercise 6: Understanding prune**
+### **Exercise 5: Understanding prune**
 
 The **`prune`** attribute allows ArgoCD to automatically delete Kubernetes resources that are no longer present in the Git repository.
 
@@ -159,7 +159,7 @@ The **`prune`** attribute allows ArgoCD to automatically delete Kubernetes resou
 7. This time, ArgoCD doesn't delete the corresponding resource in the Kubernetes cluster automatically. The resource remains until the next sync when **`prune: true`**.
 
 
-### **Exercise 7: Delete all**
+### **Exercise 6: Delete all**
 
     ```
     
