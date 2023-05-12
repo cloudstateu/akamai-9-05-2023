@@ -138,9 +138,8 @@ The **`spec.syncPolicy.automated`** attribute, when exists, allows ArgoCD to aut
 
 ### **Exercise 4: Delete all**
 
-    ```
     kubectl delete -f application.yaml
     kubectl delete namespace argocd
-    ```
+    
 
 
