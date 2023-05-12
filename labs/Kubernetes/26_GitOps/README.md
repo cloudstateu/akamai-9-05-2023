@@ -36,14 +36,14 @@ kubectl port-forward svc/argocd-server 8080:443 -n argocd
 By default, ArgoCD creates an **`admin`** user. You can retrieve the auto-generated password using this command:
 
 ```
-kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" base64 --decode && echo
+kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 --decode && echo
 ```
 
 Login using the **`admin`** user and the token outputted by the above command.
 
 Once you're logged in, it's a good practice to change and delete the initial password. Refer to ArgoCD's documentation for the procedure.
 
-### ****Update `application.yaml` with Forked Repository URL**
+### **Update `application.yaml` with Forked Repository URL**
 
 Before deploying an application to Azure Kubernetes Service (AKS), we need to make sure that the ArgoCD application's configuration points to the correct Git repository. The repository should be the one where your application's Kubernetes manifests are stored.
 
@@ -91,14 +91,14 @@ In this exercise, you will change the number of replicas for your deployment dir
 1. Check your current deployment's replica count:
     
     ```
-    kubectl get deployment <your-deployment-name> -n <your-namespace>
+    kubectl get deployment myapp -n myapp
     ```
     
 2. Update the replica count:
     
     ```
     
-    kubectl scale deployment <your-deployment-name> --replicas=<new-replica-count> -n <your-namespace>
+    kubectl scale deployment myapp --replicas=8 -n myapp
     ```
     
 3. Verify the change in ArgoCD UI.
@@ -112,46 +112,37 @@ In this exercise, you will change the number of replicas for your deployment dir
 3. Commit and push your changes.
 4. Wait for ArgoCD to sync the changes. Verify the change in the ArgoCD UI.
 
-### **Exercise 3: Manual Sync in ArgoCD**
 
-In this exercise, you will manually sync ArgoCD to apply changes that you have made on the Git side.
+### **Exercise 3: Understanding automated**
 
-1. Make a change in your Git repository (for example, modify the **`replicas`** field in your **`deployment.yaml`** file).
-2. Commit and push your changes.
-3. Go to the ArgoCD UI, select your application, and click on the "Sync" button.
-4. Verify the change in the ArgoCD UI.
+The **`spec.syncPolicy.automated`** attribute, when exists, allows ArgoCD to automatically apply changes from the Git repository to the Kubernetes cluster.
 
-### **Exercise 4: Understanding autoSync**
+1. Comment **`spec.syncPolicy.automated`** in your **`application.yaml`** manifest file in ArgoCD.
+2. Apply changed file or ready file
+    ```
+    kubectl apply -f application_manual.yaml
+    ```
+3. Refresh, ArgoCD doesn't synchronize the changes automatically. You must manually sync from the ArgoCD UI.
+4. Try to sync manually, click options on deploy named: myapp, then Sync.
+5. From menu, set: SYNCHRONIZE RESOURCES: all
+6. Tick: PRUNE
+7. On Top click: Synchronize
+8. Uncomment **`spec.syncPolicy.automated`** in your **`application.yaml`** manifest file in ArgoCD.
+9. Apply:
+    ```
+    kubectl apply -f application.yaml
+    ```
+10. Again, make a change in your Git repository.
+11. Refresh, Observe that ArgoCD automatically synchronizes the changes.
 
-The **`autoSync`** attribute, when set to true, allows ArgoCD to automatically apply changes from the Git repository to the Kubernetes cluster.
 
-1. Set **`autoSync: true`** in your **`application.yaml`** file.
-2. Make a change in your Git repository (for example, modify the **`replicas`** field in your **`deployment.yaml`** file).
-3. Commit and push your changes.
-4. Observe that ArgoCD automatically synchronizes the changes.
-5. Set **`autoSync: false`** in your **`application.yaml`** file.
-6. Again, make a change in your Git repository.
-7. This time, ArgoCD doesn't synchronize the changes automatically. You must manually sync from the ArgoCD UI.
+### **Exercise 4: Delete all**
 
-### **Exercise 5: Understanding selfHeal**
+    ```
+    
+    kubectl delete -f application.yaml
+    kubectl delete namespace argocd
 
-The **`selfHeal`** attribute allows ArgoCD to automatically revert changes made directly in the Kubernetes cluster that do not match the Git repository.
+    ```
 
-1. Set **`selfHeal: true`** in your **`application.yaml`** file.
-2. Change the number of replicas for your deployment directly in the Kubernetes cluster.
-3. Observe that ArgoCD automatically reverts the change to match the Git repository.
-4. Set **`selfHeal: false`** in your **`application.yaml`** file.
-5. Again, change the number of replicas for your deployment directly in the Kubernetes cluster.
-6. This time, ArgoCD doesn't revert the change automatically. The change remains until the next sync.
 
-### **Exercise 6: Understanding prune**
-
-The **`prune`** attribute allows ArgoCD to automatically delete Kubernetes resources that are no longer present in the Git repository.
-
-1. Set **`prune: true`** in your **`application.yaml`** file.
-2. Remove a Kubernetes resource from your Git repository.
-3. Commit and push your changes.
-4. Observe that ArgoCD automatically deletes the corresponding resource in the Kubernetes cluster.
-5. Set **`prune: false`** in your **`application.yaml`** file.
-6. Again, remove a Kubernetes resource from your Git repository.
-7. This time, ArgoCD doesn't delete the corresponding resource in the Kubernetes cluster automatically. The resource remains until the next sync when **`prune: true`**.
