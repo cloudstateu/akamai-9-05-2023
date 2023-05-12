@@ -8,7 +8,7 @@ spec:
   project: default
 
   source:
-    repoURL: https://github.com/cloudstateu/gitops-lab.git
+    repoURL: <place-url-to-forked-repo>
     targetRevision: HEAD
     path: dev
   
