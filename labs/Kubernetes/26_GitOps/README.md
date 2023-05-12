@@ -135,49 +135,14 @@ The **`spec.syncPolicy.automated`** attribute, when exists, allows ArgoCD to aut
 10. Again, make a change in your Git repository.
 11. Refresh, Observe that ArgoCD automatically synchronizes the changes.
 
-<<<<<<< HEAD
-=======
-### **Exercise 4: Understanding selfHeal**
->>>>>>> 646e1ab4226bb3860dc749d3b221cf84bc03ea67
 
 ### **Exercise 4: Delete all**
 
-<<<<<<< HEAD
     ```
     
     kubectl delete -f application.yaml
     kubectl delete namespace argocd
 
     ```
-=======
-1. Set **`selfHeal: false`** in your **`application.yaml`** manifest file in ArgoCD.
-2. Again, change the number of replicas for your deployment directly in the Kubernetes cluster.
-3. This time, ArgoCD doesn't revert the change automatically. The change remains until the next sync.
-4. Set **`selfHeal: true`** in your **`application.yaml`** manifest file in ArgoCD.
-5. Change the number of replicas for your deployment directly in the Kubernetes cluster.
-6. Observe that ArgoCD automatically reverts the change to match the Git repository.
-
-### **Exercise 5: Understanding prune**
->>>>>>> 646e1ab4226bb3860dc749d3b221cf84bc03ea67
 
 
-<<<<<<< HEAD
-=======
-1. Set **`prune: true`** in your **`application.yaml`** file.
-2. Remove a Kubernetes resource from your Git repository.
-3. Commit and push your changes.
-4. Observe that ArgoCD automatically deletes the corresponding resource in the Kubernetes cluster.
-5. Set **`prune: false`** in your **`application.yaml`** file.
-6. Again, remove a Kubernetes resource from your Git repository.
-7. This time, ArgoCD doesn't delete the corresponding resource in the Kubernetes cluster automatically. The resource remains until the next sync when **`prune: true`**.
-
-
-### **Exercise 6: Delete all**
-
-    ```
-    
-    kubectl delete -f application.yaml
-    kubectl delete namespace argocd
-
-    ```
->>>>>>> 646e1ab4226bb3860dc749d3b221cf84bc03ea67
